@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="member">
+   <typeAlias alias="memberVO" type="vo.MemberVO"/>
+   <sql id="selectAll">
+      SELECT *
+         FROM TMEMBER
+   </sql>
+   <select id="getMemberList" resultClass="memberVO">
+   		SELECT * FROM TMEMBER order by mem_type
+   </select>
+   <select id="memberInfo" parameterClass="map" resultClass="memberVO">
+      SELECT * 
+         FROM TMEMBER
+         WHERE MEM_ID = #mem_id#
+           AND MEM_PASS = #mem_pass#   
+   </select>
+   
+   <insert id="InsertmemberInfo" parameterClass="memberVO">
+        INSERT INTO TMEMBER ( 
+                         MEM_ID,
+                       MEM_PASS,
+                       MEM_NAME,
+                       MEM_TEL,
+                       MEM_MAIL,
+                       MEM_AP_DATE,
+                       MEM_TYPE)
+                       
+                  VALUES (
+                         #mem_id#,
+                         #mem_pass#,
+                         #mem_name#,
+                         #mem_tel#,
+                         #mem_mail#,
+                         sysdate,
+                         'user')
+        <selectKey resultClass="string">
+           SELECT   MEM_NAME
+             FROM  TMEMBER
+            WHERE  MEM_ID = #mem_id#
+        </selectKey>
+   </insert>
+   <update id="updateMemberInfo">
+   		UPDATE TMEMBER
+   		   SET MEM_PASS =#mem_pass#,
+   		   	   MEM_NAME =#mem_name#,
+   		   	   MEM_TEL =#mem_tel#,
+   		   	   MEM_MAIL =#mem_mail#,
+   		   	   MEM_TYPE =#mem_type#
+   		 WHERE MEM_ID = #mem_id#
+   
+   </update>
+   
+   
+</sqlMap>

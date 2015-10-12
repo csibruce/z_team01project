@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<!-- main.tiles 요청으로 해당 definition에 접근 
+		 definition내에 선언된 attribute를 활용해서 css가 적용된
+		 레이아웃을 template속성에 특정 jsp에서 구성.
+	-->
+	<definition name="main" template="/WEB-INF/template.jsp">
+		
+	</definition>	
+	
+	<definition name="realmain" template="/WEB-INF/realmain.jsp">
+		<put-attribute name="header" value="/WEB-INF/layout/header.jsp"></put-attribute>
+		<put-attribute name="content" value="/WEB-INF/member/login.jsp"></put-attribute>
+		<put-attribute name="footer" value="/WEB-INF/layout/footer.jsp"></put-attribute>
+	</definition>
+	
+	<definition name="needlogin/*" extends="realmain">
+		<put-attribute name="content" value="/WEB-INF/{1}.jsp"></put-attribute>	
+	</definition>
+	
+	<definition name="freeboard/*" extends="realmain">
+		<put-attribute name="content" value="/WEB-INF/freeboard/{1}.jsp"></put-attribute>
+	</definition>
+	<definition name="notice/*" extends="realmain">
+		<put-attribute name="content" value="/WEB-INF/notice/{1}.jsp"></put-attribute>
+	</definition>
+	<definition name="qna/*" extends="realmain">
+		<put-attribute name="content" value="/WEB-INF/qna/{1}.jsp"></put-attribute>
+	</definition>
+	<definition name="member/*" extends="realmain">
+		<put-attribute name="content" value="/WEB-INF/member/{1}.jsp"></put-attribute>
+	</definition>
+	
+<!-- 	<definition name="member/*" extends="main"> -->
+<!-- 		<put-attribute name="body" value="/WEB-INF/member/{1}.jsp"></put-attribute> -->
+<!-- 	</definition> -->
+	
+	
+</tiles-definitions>       

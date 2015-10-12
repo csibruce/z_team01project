@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+<sqlMap namespace="notice">
+		
+	<typeAlias alias="noticeVO" type="vo.NoticeVO"/>
+
+	<select id="noticeList" resultClass="noticeVO">
+		SELECT *
+		  FROM NOTICE
+		ORDER BY NT_NO DESC
+	</select>
+	
+	<select id="noticeInfo" resultClass="noticeVO">
+		SELECT *
+		  FROM NOTICE
+		 WHERE NT_NO = #nt_no# 
+	</select>
+	
+	<insert id="insertNoticeInfo" parameterClass="noticeVO">
+	  <selectKey keyProperty="nt_no">
+         SELECT NTSEQ.NEXTVAL
+         FROM DUAL
+      </selectKey>
+		INSERT INTO NOTICE(
+							NT_NO,
+							NT_TITLE,
+							NT_CONTENT,
+							NT_DATE,
+							NT_COUNT,
+							NT_WRITER,
+							NT_SEQ,
+							NT_COLOR)
+					VALUES(
+					        #nt_no#,
+					        #nt_title#,
+					        #nt_content#,
+					        sysdate,
+					        0,
+					        #nt_writer#,
+					        0,
+					        #nt_color#)
+	</insert>
+	
+	<update id="updateNoticeInfo" parameterClass="noticeVO">
+	 	UPDATE	NOTICE
+	 	   SET	NT_TITLE = #nt_title#,
+	 	   	  	NT_WRITER = #nt_writer#,
+	 	   	  	NT_CONTENT = #nt_content#,
+	 	   	  	NT_COLOR	= #nt_color#
+	 	 WHERE	NT_NO = #nt_no# 
+	</update>
+	
+	<update id="updateHitCount" parameterClass="map">   
+      UPDATE NOTICE
+         SET NT_COUNT = NT_COUNT+1
+       WHERE NT_NO = #nt_no# 
+   </update>
+   
+   <delete id="deleteNoticeInfo" parameterClass="map">
+   		DELETE	FROM NOTICE
+   		 WHERE	NT_NO = #nt_no#
+   </delete>
+	
+</sqlMap>

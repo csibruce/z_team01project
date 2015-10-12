@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="free">
+	<typeAlias alias="freeVO" type="vo.FreeVO"/>
+		
+		
+	<select id="getFreeList" resultClass="freeVO" parameterClass="map">
+	 SELECT * 
+	   FROM
+	 	(SELECT ROWNUM rowno ,A.* 
+	 	   FROM (SELECT * FROM FREEBOARD
+	         	  WHERE FB_STATUS = 'y'
+	         		AND FB_DEPTH = 0
+	        	 ORDER BY FB_NO) A
+	     ORDER BY rowno desc) B
+	 WHERE 1=1
+	 <dynamic>
+	 	<isNotEmpty property="end">AND B.ROWNO &lt; #end#</isNotEmpty>
+	 	<isNotEmpty property="start">AND B.ROWNO &gt; #start#</isNotEmpty>
+	 </dynamic>
+	   
+	   
+
+	</select>
+	
+	<select id="getFreeInfo" parameterClass="map" resultClass="freeVO">
+		SELECT * FROM FREEBOARD
+		WHERE FB_NO = #fb_no#
+		<dynamic>
+			<isNotNull property="fb_pass">
+				AND FB_PASS = #fb_pass#
+			</isNotNull>
+		</dynamic>
+	</select>
+	<insert id="insertFreeInfo">
+		<selectKey keyProperty="fb_no" resultClass="string">
+			select fbseq.nextval from dual
+		</selectKey>
+		INSERT INTO FREEBOARD(
+							 FB_NO
+							,FB_TITLE
+							,FB_WRITER
+							,FB_ID
+							,FB_CONTENT
+							,FB_DATE
+							,FB_GROUP
+							,FB_DEPTH
+							,FB_SEQ
+							,FB_COUNT
+							,FB_STATUS
+							,FB_PASS
+							 )
+					  VALUES(
+					  		 #fb_no#
+					  		,#fb_title#
+					  		,#fb_writer#
+					  		,#fb_id#
+					  		,#fb_content#
+					  		,sysdate
+					  		,#fb_no#
+					  		,0
+					  		,0
+					  		,0
+					  		,'y'
+					  		,#fb_pass#
+							 )
+	</insert>
+	
+	<update id="updateFreeInfo" parameterClass="freeVO">
+		UPDATE FREEBOARD
+		   SET FB_WRITER = #fb_writer#
+		      ,FB_CONTENT = #fb_content#
+		      ,FB_TITLE = #fb_title#
+		 WHERE FB_NO = #fb_no#
+		   AND FB_PASS = #fb_pass#
+	</update>
+	
+	<update id="deleteFreeInfo" parameterClass="map">
+		UPDATE FREEBOARD
+		   SET FB_STATUS = 'n'
+		 WHERE FB_NO = #fb_no#
+		   AND FB_PASS = #fb_pass#
+	</update>
+	
+	<update id="addCount">
+		UPDATE FREEBOARD
+		   SET FB_COUNT = FB_COUNT+1
+		 WHERE FB_NO = #fb_no#
+	</update>
+	<insert id="insertFreeInfoReply">
+		<selectKey keyProperty="fb_no" resultClass="string">
+			select fbseq.nextval from dual
+		</selectKey>
+		INSERT INTO FREEBOARD(
+							 FB_NO
+							,FB_TITLE
+							,FB_WRITER
+							,FB_ID
+							,FB_CONTENT
+							,FB_DATE
+							,FB_GROUP
+							,FB_DEPTH
+							,FB_SEQ
+							,FB_COUNT
+							,FB_STATUS
+							,FB_PASS
+							,FB_IMG
+							 )
+					  VALUES(
+					  		 #fb_no#
+					  		,'R E P L Y'
+					  		,#fb_writer#
+					  		,#fb_id#
+					  		,#fb_content#
+					  		,sysdate
+					  		,#fb_group#
+					  		,1
+					  		,(select max(fb_seq) from freeboard where fb_no = #fb_group#)+1
+					  		,0
+					  		,'y'
+					  		,#fb_pass#
+					  		,#fb_img#
+							 )
+	</insert>
+	<select id="getReplyList" resultClass="freeVO">
+	
+		SELECT * FROM FREEBOARD
+		 WHERE FB_GROUP = #fb_no#
+		   AND FB_STATUS = 'y'
+		   AND FB_SEQ &gt; 0
+		 ORDER BY FB_NO DESC
+	</select>
+	<select id="getlistTotal" resultClass="string">
+		SELECT COUNT(FB_NO) FROM FREEBOARD
+		 WHERE FB_STATUS = 'y'
+           AND FB_DEPTH = 0
+	</select>
+	<update id="updateRcnt" parameterClass="freeVO">
+		UPDATE FREEBOARD
+		   SET FB_RCNT = (SELECT COUNT(*) FROM FREEBOARD WHERE FB_GROUP=#fb_group# AND FB_DEPTH = 1 AND FB_STATUS = 'y')
+		 WHERE FB_NO = #fb_group#
+	</update>
+	
+	<update id="deleteFreeReply" parameterClass="freeVO">
+		UPDATE FREEBOARD
+		   SET FB_STATUS = 'n'
+		 WHERE FB_NO = #fb_no#
+		   AND FB_PASS = #fb_pass#
+	</update>
+	
+</sqlMap>

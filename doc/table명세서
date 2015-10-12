@@ -1,0 +1,72 @@
+테이블
+	tmember
+		mem_id(varchar2(30), mem_pass(varchar2(30)), mem_name(varchar2(30)), mem_mail(varchar2(30)), mem_tel(varchar2(30)),mem_ap_date(date) => all not null
+	freeboard
+		fb_no(number(7)), fb_title(varchar2(200)), fb_writer(varchar2(30)), fb_id(VARCHAR2(30)), fb_content(clob), fb_date(date default sysdate),fb_group(number(7)), fb_depth(number(3)), fb_seq(number(3)), fb_count(number(5)), fb_status(char(1))
+	notice
+		nt_no(number(7)), nt_title(varchar2(200)), nt_content(clob), nt_date(date default sysdate), nt_count(number(5))
+	qna
+		qn_no(number(7)), qn_title(varchar2(200)), qn_writer(varchar2(30)), qn_id(VARCHAR2(30)), qn_content(clob), qn_date(date default sysdate), qn_group(number(7)), qn_depth(number(3)), qn_seq(number(3)), qn_count(number(5)), qn_status(char(1))
+	dboard
+<<<<<<< .mine
+		
+		
+		
+		
+
+		=======
+		
+ 
+ *tmember		
+	CREATE TABLE  tmember
+(  mem_id                VARCHAR2(30)   NOT NULL,   -- 회원ID  
+   mem_pass              VARCHAR2(30)   NOT NULL,   -- 비밀번호
+   mem_name              VARCHAR2(30)   NOT NULL,   -- 성명             
+   mem_mail              VARCHAR2(30)   NOT NULL,   -- E-mail주소
+   mem_tel                VARCHAR2(30),              -- 이동전화
+   mem_ap_date       DATE                           -- 가입날짜
+);
+------------------------------------------------------------------------------
+ * freeboard
+	Create Table freeboard ( 
+ fb_no     number(7)  not null,         -- 글번호(PK) 
+ fb_title  varchar2(200) not null,      -- 제목 
+ fb_writer varchar2(30) not null,       -- 글쓴이(아이디)
+ fb_id     VARCHAR2(30) not null,       -- 가입한아이디
+ fb_content clob ,                      -- 내용
+ fb_date date default sysdate,      -- 최초 등록일  
+ fb_group  number(7) not null,          -- 그룹번호
+ fb_depth  number(3) default 0,         -- 글의 깊이(depth)
+ fb_seq    number(3) default 0,         -- 그룹내 순번  
+ fb_count number(5) default 0,            -- 조회수
+ fb_status char(1) default 'y',         -- 게시글 상태
+ 
+ constraint pk_freeboard primary key(fb_no),
+ constraint fr_freeboard foreign key(fb_id)
+ references member(mem_id)
+);
+------------------------------------------------------------------------------
+ * notice
+	Create Table notice ( 
+ nt_no     number(7)  not null,         -- 글번호(PK) 
+ nt_title  varchar2(200) not null,      -- 제목 
+ nt_content clob ,                      -- 내용
+ nt_date date default sysdate,          -- 최초 등록일  
+ nt_count number(5) default 0           -- 조회수
+);
+-------------------------------------------------------------------------------
+ * qna
+	Create Table qna ( 
+ qn_no     number(7)  not null,         -- 글번호(PK) 
+ qn_title  varchar2(200) not null,      -- 제목 
+ qn_writer varchar2(30) not null,       -- 글쓴이(아이디)
+ qn_id     VARCHAR2(30) not null,       -- 가입한아이디
+ qn_content clob ,                      -- 내용
+ qn_date date default sysdate,          -- 최초 등록일  
+ qn_group  number(7) not null,          -- 그룹번호
+ qn_depth  number(3) default 0,         -- 글의 깊이(depth)
+ qn_seq    number(3) default 0,         -- 그룹내 순번  
+ qn_count number(5) default 0,          -- 조회수
+ qn_status char(1) default 'y'          -- 게시글 상태
+);
+------------------------------------------------------------------------------	>>>>>>> .r9

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="qna">
+   <typeAlias alias="qnaVO" type="vo.QnaVO"/>
+   <sql id="selectAll">
+      SELECT *
+         FROM QNA
+   </sql>
+   
+   
+   <select id="qnaList" resultClass="qnaVO">
+      <include refid="selectAll"/>
+       WHERE QN_STATUS = 'y'
+   </select>
+   
+   <select id="qnaInfo" resultClass="qnaVO" parameterClass="map">
+      <include refid="selectAll"/>
+         WHERE 
+            QN_NO = #qn_no#
+         <dynamic>
+            <isNotNull property="qn_pass">
+            AND QN_PASS=#qn_pass#
+            </isNotNull>
+         </dynamic>
+   </select>
+   
+      <insert id="insertqnaInfo">
+      <selectKey keyProperty="qn_no" resultClass="string">
+         SELECT QNSEQ.NEXTVAL
+           FROM DUAL
+      </selectKey>
+      INSERT INTO QNA
+      (      
+            QN_NO,
+            QN_TITLE,
+            QN_WRITER,
+            QN_ID,
+            QN_CONTENT,
+            QN_DATE,
+            QN_GROUP,
+            QN_DEPTH,
+            QN_SEQ,
+            QN_COUNT,
+            QN_STATUS,
+            QN_PASS
+      )VALUES(
+             #qn_no#,
+             #qn_title#,
+             #qn_writer#,
+             'a001',
+             #qn_content#,
+              sysdate,
+             0,
+             0,
+             0,   
+             0,
+             'y',
+             #qn_pass#
+             
+       )
+   </insert>
+   
+   <update id="updateqnaInfo" parameterClass="qnaVO">
+      UPDATE QNA
+          SET 
+                QN_CONTENT=#qn_content#,
+                QN_TITLE=#qn_title#
+       WHERE   QN_NO=#qn_no#
+           
+   </update>
+   
+   <update id="updateHitCnt" parameterClass="map">
+      UPDATE QNA
+         SET QN_COUNT=QN_COUNT+1
+       WHERE QN_NO=#qn_no#
+   </update>
+
+   <delete id="deleteqnaInfo" parameterClass="map">
+      UPDATE QNA
+      SET     QN_STATUS ='n'
+      WHERE QN_NO=#qn_no#
+        AND QN_PASS=#qn_pass#
+   </delete>
+      
+</sqlMap>
+
+
+
+
+
